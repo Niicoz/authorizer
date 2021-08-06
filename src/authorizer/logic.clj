@@ -1,4 +1,6 @@
-(ns authorizer.logic)
+(ns authorizer.logic
+  (:require [schema.core :as s]
+            [authorizer.model :as a.model]))
 (use 'java-time)
 
 (defn card-from-client?
@@ -41,8 +43,12 @@
        (map :value)
        (reduce +)))
 
-(defn purchases-by-category
-  [purchases]
+(s/defn purchases-by-category :- a.model/Total-by-category
+  [purchases :- a.model/Purchases]
   (->> purchases
        (group-by :category)
        (map total-by-category)))
+
+(s/defn add-purchase :- a.model/Purchases
+        [purchases :- a.model/Purchases, purchase :- a.model/Purchase]
+        (conj purchases purchase))

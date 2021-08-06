@@ -1,6 +1,8 @@
 (ns authorizer.challenge
+  (:use clojure.pprint)
   (:require [authorizer.db :as c.db]
-            [authorizer.logic :as c.logic]))
+            [authorizer.logic :as c.logic]
+            [schema.core :as s]))
 
 (let [purchases (c.db/all-purchases)
       clients (c.db/all-clients)
@@ -11,4 +13,5 @@
   (println "Total value by category:" (c.logic/purchases-by-category purchases))
   (println "Purchases of specific establishment"
            (c.logic/filter-purchases-of-establishment purchases "Piticas"))
-  (println "Invoice:" (c.logic/total-invoice purchases 8)))
+  (println "Invoice:" (c.logic/total-invoice purchases 8))
+  (pprint  (c.logic/add-purchase (s/as-queue purchases) {:id 2, :client-cpf "123456" :date "14/07/2020", :value 500, :establishment "Piticas" :category "Roupas"})))
